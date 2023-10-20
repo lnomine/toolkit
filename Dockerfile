@@ -24,4 +24,5 @@ RUN $download https://releases.hashicorp.com/terraform/1.5.7/terraform_1.5.7_lin
  chmod +x /usr/local/bin/* && \
  find /usr/local/bin -mindepth 1 -type f ! -exec file {} \; -o -type d ! -exec file {} \; | grep -v "executable" | awk -F: '{print $1}' | xargs rm -rf
 
+ADD tfmerge /usr/local/bin/
 RUN rm -rf /var/lib/apt/lists/*
