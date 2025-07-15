@@ -1,20 +1,16 @@
-FROM debian:bookworm
+FROM debian:trixie
 ENV download="curl -LO --output-dir /usr/local/bin"
 ENV altdownload="curl -L --output-dir /usr/local/bin"
 WORKDIR /root/workspace
 
 RUN apt update ; apt install --no-install-recommends curl unzip ca-certificates file openssh-client jq -y
 
-RUN $download https://releases.hashicorp.com/terraform/1.5.7/terraform_1.5.7_linux_amd64.zip && \
- $download https://releases.hashicorp.com/consul/1.16.2/consul_1.16.2_linux_amd64.zip && \
- $download https://releases.hashicorp.com/vault/1.15.0/vault_1.15.0_linux_amd64.zip && \
- $download https://releases.hashicorp.com/waypoint/0.11.4/waypoint_0.11.4_linux_amd64.zip && \
+RUN $download https://releases.hashicorp.com/terraform/1.12.2/terraform_1.12.2_linux_amd64.zip && \
+ $download https://releases.hashicorp.com/vault/1.20.0/vault_1.20.0_linux_amd64.zip && \
+ $download https://github.com/opentofu/opentofu/releases/download/v1.10.2/tofu_1.10.2_linux_amd64.zip && \
  $download https://dl.k8s.io/release/$(curl -Ls https://dl.k8s.io/release/stable.txt)/bin/linux/amd64/kubectl && \
- $download https://get.helm.sh/helm-v3.13.0-linux-amd64.tar.gz && \
- $download https://github.com/vmware-tanzu/velero/releases/download/v1.12.0/velero-v1.12.0-linux-amd64.tar.gz && \
+ $download https://get.helm.sh/helm-v3.18.4-linux-amd64.tar.gz && \
  $download https://dl.min.io/client/mc/release/linux-amd64/mc  && \
- $download https://github.com/eksctl-io/eksctl/releases/latest/download/eksctl_Linux_amd64.tar.gz && \
- $download https://github.com/fluxcd/flux2/releases/download/v2.1.1/flux_2.1.1_linux_amd64.tar.gz && \
  $altdownload https://github.com/argoproj/argo-cd/releases/latest/download/argocd-linux-amd64 -o argocd && \
  $altdownload https://github.com/siderolabs/talos/releases/latest/download/talosctl-linux-amd64 -o talosctl && \
  $altdownload https://github.com/gruntwork-io/terragrunt/releases/latest/download/terragrunt_linux_amd64 -o terragrunt && \
