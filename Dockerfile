@@ -15,10 +15,8 @@ RUN $download https://releases.hashicorp.com/terraform/1.12.2/terraform_1.12.2_l
  $altdownload https://github.com/siderolabs/talos/releases/latest/download/talosctl-linux-amd64 -o talosctl && \
  $altdownload https://github.com/gruntwork-io/terragrunt/releases/latest/download/terragrunt_linux_amd64 -o terragrunt && \
  $altdownload https://github.com/kubernetes-sigs/cluster-api/releases/latest/download/clusterctl-linux-amd64 -o clusterctl && \
- find /usr/local/bin -type f \( -name "*.zip" -o -name "*.tar.gz" \) -exec sh -c 'if echo "{}" | grep -q ".zip$"; then unzip -q "{}" -d /usr/local/bin; elif echo "{}" | grep -q ".tar.gz$"; then tar xzf "{}" -C /usr/local/bin; fi && rm "{}"' \; && \
- find /usr/local/bin -type d -name "*linux-amd64" -exec sh -c 'mv -t "${1%/*}" -- "$1"/*' _ {} \; && \
- chmod +x /usr/local/bin/* && \
- find /usr/local/bin -mindepth 1 -type f ! -exec file {} \; -o -type d ! -exec file {} \; | grep -v "executable" | awk -F: '{print $1}' | xargs rm -rf
+ find /usr/local/bin -type f \( -name "*.zip" -o -name "*.tar.gz" \) -exec sh -c 'for f; do case "$f" in *.zip) unzip -o -q "$f" -d /usr/local/bin ;; *.tar.gz) tar --overwrite -xzf "$f" -C /usr/local/bin ;; esac; rm -f "$f"; done' sh {} + && \
+ chmod +x /usr/local/bin/*
 
 ADD tfmerge /usr/local/bin/
 RUN rm -rf /var/lib/apt/lists/*
