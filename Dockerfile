@@ -20,7 +20,6 @@ RUN ARCH_SUFFIX=$(case "$(uname -m)" in \
     esac) \
     && BINARIES_DOWNLOAD=" \
       https://releases.hashicorp.com/terraform/1.12.2/terraform_1.12.2_linux_${ARCH_SUFFIX}.zip \
-      https://releases.hashicorp.com/vault/1.20.0/vault_1.20.0_linux_${ARCH_SUFFIX}.zip \
       https://github.com/opentofu/opentofu/releases/download/v1.10.2/tofu_1.10.2_linux_${ARCH_SUFFIX}.zip \
       https://dl.k8s.io/release/$(curl -Ls https://dl.k8s.io/release/stable.txt)/bin/linux/${ARCH_SUFFIX}/kubectl \
       https://get.helm.sh/helm-v3.18.4-linux-${ARCH_SUFFIX}.tar.gz \
@@ -29,7 +28,6 @@ RUN ARCH_SUFFIX=$(case "$(uname -m)" in \
     " \
     && for url in $BINARIES_DOWNLOAD; do $download "$url"; done \
     && BINARIES_ALT=" \
-      https://github.com/argoproj/argo-cd/releases/latest/download/argocd-linux-${ARCH_SUFFIX} argocd \
       https://github.com/siderolabs/talos/releases/latest/download/talosctl-linux-${ARCH_SUFFIX} talosctl \
       https://github.com/gruntwork-io/terragrunt/releases/latest/download/terragrunt_linux_${ARCH_SUFFIX} terragrunt \
       https://github.com/kubernetes-sigs/cluster-api/releases/latest/download/clusterctl-linux-${ARCH_SUFFIX} clusterctl \
