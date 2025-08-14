@@ -38,9 +38,7 @@ RUN case "$(uname -m)" in \
   set -- $BINARIES_ALT && \
   while [ "$1" ]; do $altdownload "$1" -o "$2"; shift 2; done && \
   \
-  find /usr/local/bin -type f \( -name "*.zip" -o -name "*.tar.gz" \) -exec sh -c 'for f; do case "$f" in *.zip) unzip -o -q "$f" -d /usr/local/bin ;; *.tar.gz) tar --overwrite -xzf "$f" -C /usr/local/bin ;; esac; rm -f "$f"; done' sh {} + && \
-  chmod +x /usr/local/bin/*
+  dst=/usr/local/bin; find "$dst" -type f \( -name "*.zip" -o -name "*.tar.gz" \) -exec sh -c 'for f; do case "$f" in *.zip) unzip -o -q "$f" -d "$0" ;; *.tar.gz) tar --overwrite -xzf "$f" -C "$0" ;; esac; rm -f "$f"; done' "$dst" {} + && mv "$dst"/linux-*/* "$dst"/bin/* "$dst"/ && rm -r "$dst"/*.md "$dst"/LIC* "$dst"/*/
 
-COPY --from=builder /build/tfmerge /usr/local/bin/tfmerge
-
-RUN rm -rf /var/lib/apt/lists/*
+COPY --from=builder /build/tfmerge/tfmerge /usr/local/bin/tfmerge
+RUN rm -rf /var/lib/apt/lists/* ; chmod +x /usr/local/bin/*
