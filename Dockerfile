@@ -8,11 +8,9 @@ ENV download="curl -LO --output-dir /usr/local/bin"
 ENV altdownload="curl -L --output-dir /usr/local/bin"
 WORKDIR /root/workspace
 
-# Installation des packages et nettoyage en une seule couche
 RUN apt-get update && apt-get install --no-install-recommends curl unzip ca-certificates file openssh-client jq -y \
     && rm -rf /var/lib/apt/lists/* /tmp/* /var/tmp/*
 
-# Détection architecture et téléchargement des binaires
 RUN ARCH_SUFFIX=$(case "$(uname -m)" in \
       x86_64) echo "amd64" ;; \
       aarch64) echo "arm64" ;; \
@@ -31,6 +29,7 @@ RUN ARCH_SUFFIX=$(case "$(uname -m)" in \
       https://github.com/siderolabs/talos/releases/latest/download/talosctl-linux-${ARCH_SUFFIX} talosctl \
       https://github.com/gruntwork-io/terragrunt/releases/latest/download/terragrunt_linux_${ARCH_SUFFIX} terragrunt \
       https://github.com/kubernetes-sigs/cluster-api/releases/latest/download/clusterctl-linux-${ARCH_SUFFIX} clusterctl \
+      https://github.com/loft-sh/vcluster/releases/latest/download/vcluster-linux-${ARCH_SUFFIX} vcluster \
     " \
     && set -- $BINARIES_ALT \
     && while [ "$1" ]; do $altdownload "$1" -o "$2"; shift 2; done \
