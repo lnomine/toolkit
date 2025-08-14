@@ -8,7 +8,7 @@ ENV download="curl -LO --output-dir /usr/local/bin"
 ENV altdownload="curl -L --output-dir /usr/local/bin"
 WORKDIR /root/workspace
 
-RUN apt-get update && apt-get install --no-install-recommends curl unzip ca-certificates file openssh-client jq -y \
+RUN apt-get update && apt-get install --no-install-recommends curl unzip ca-certificates openssh-client screen -y \
     && rm -rf /var/lib/apt/lists/* /tmp/* /var/tmp/*
 
 RUN ARCH_SUFFIX=$(case "$(uname -m)" in \
@@ -17,11 +17,9 @@ RUN ARCH_SUFFIX=$(case "$(uname -m)" in \
       *) echo "Unsupported architecture: $(uname -m)" && exit 1 ;; \
     esac) \
     && BINARIES_DOWNLOAD=" \
-      https://releases.hashicorp.com/terraform/1.12.2/terraform_1.12.2_linux_${ARCH_SUFFIX}.zip \
       https://github.com/opentofu/opentofu/releases/download/v1.10.2/tofu_1.10.2_linux_${ARCH_SUFFIX}.zip \
       https://dl.k8s.io/release/$(curl -Ls https://dl.k8s.io/release/stable.txt)/bin/linux/${ARCH_SUFFIX}/kubectl \
       https://get.helm.sh/helm-v3.18.4-linux-${ARCH_SUFFIX}.tar.gz \
-      https://dl.min.io/client/mc/release/linux-${ARCH_SUFFIX}/mc \
       https://gitlab.com/gitlab-org/cli/-/releases/v1.66.0/downloads/glab_1.66.0_linux_${ARCH_SUFFIX}.tar.gz \
     " \
     && for url in $BINARIES_DOWNLOAD; do $download "$url"; done \
