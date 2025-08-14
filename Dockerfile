@@ -1,3 +1,10 @@
+FROM golang:1.25.0-trixie AS builder
+WORKDIR /build
+
+RUN git clone https://github.com/magodo/tfmerge.git .
+RUN go mod tidy && \
+    go build -o tfmerge
+
 FROM debian:trixie
 
 ENV download="curl -LO --output-dir /usr/local/bin"
@@ -5,7 +12,6 @@ ENV altdownload="curl -L --output-dir /usr/local/bin"
 WORKDIR /root/workspace
 
 RUN apt-get update && apt-get install --no-install-recommends curl unzip ca-certificates file openssh-client jq -y
-
 RUN case "$(uname -m)" in \
     x86_64) ARCH_SUFFIX="amd64" ;; \
     aarch64) ARCH_SUFFIX="arm64" ;; \
@@ -35,5 +41,6 @@ RUN case "$(uname -m)" in \
   find /usr/local/bin -type f \( -name "*.zip" -o -name "*.tar.gz" \) -exec sh -c 'for f; do case "$f" in *.zip) unzip -o -q "$f" -d /usr/local/bin ;; *.tar.gz) tar --overwrite -xzf "$f" -C /usr/local/bin ;; esac; rm -f "$f"; done' sh {} + && \
   chmod +x /usr/local/bin/*
 
-ADD tfmerge /usr/local/bin/
+COPY --from=builder /build/tfmerge /usr/local/bin/tfmerge
+
 RUN rm -rf /var/lib/apt/lists/*
